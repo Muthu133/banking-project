@@ -1,0 +1,419 @@
+****************************************************************************************************************
+****************************************************************************************************************
+{{FORMAT}}
+1.Abstract
+2.ER diagram
+3.Table Design
+4.Create Queries with Description
+5.Insert Queries with Select(all)
+6.Custom Queries with Outputs
+7.Conclusion(findings and doings)
+8.Future Enhancement(example- servers as a foundation for future improventment/enhancement)(4-6points)
+****************************************************************************************************************
+****************************************************************************************************************
+
+
+
+
+
+
+****************{ABSTRACT}****************
+BANK DATABASE
+ABSTRACT 
+
+
+
+Banks rely heavily on accurate and efficient management of employee and customer data in case there is a problem with this it may lead to potential inefficiencies and errors in banking operations.
+
+so this project aims to develop a bank database system using SQL, which will incorporate employee information, customer data, branch details, trade records, accounts, and loan information. 
+
+The methodology involves designing a relational database schema with appropriate tables and defining the necessary relationships by implementing queries and stored SQL procedures 
+which also ensures smooth retrieval and manipulation of data.
+
+The main takeaway message of this project is the importance of a well-structured and efficient bank database system.
+by using the stored employees and customers information the bank will be able to provide improved customer service, better account management, and effective loan and trade tracking.
+
+Ultimately, our banking database project aims to enhance the overall performance and reliability of banking processes.
+
+
+
+Team 
+Umesh Kumar Yadav 
+Vignesh.R
+Mohammad Kamran Shahid   
+Muthu Raj.K
+Yeshwant C
+
+************************************************************************
+
+
+
+
+
+
+
+********{ER DIAGRAM}********
+
+completed.
+
+*******************************
+
+
+
+
+
+
+********{TABLE DESIGN}********
+
+completed.
+
+********************************
+
+
+
+
+
+
+
+********[just to delete the tables if they already exist]********
+
+drop table employee;
+drop table loan;
+drop table tradedetails;
+drop table account;
+drop table customer;
+drop table branch;
+
+************************************************************
+********{CREATE and DESC}********
+
+
+CREATE TABLE branch
+   (
+    bid VARCHAR(6),
+    bname VARCHAR(30),
+    bcity VARCHAR(30),
+    no_of_customer INT,
+    no_of_employee INT,
+    branch_contact_email VARCHAR(30),
+    CONSTRAINT branch_bid_pk PRIMARY KEY(bid) 
+   );
+desc branch;
+
+
+
+
+CREATE TABLE customer
+   (
+       custid VARCHAR(6),
+       name VARCHAR(30),
+       city VARCHAR(15),
+       address VARCHAR(50),
+       mobileno VARCHAR(10),
+       email VARCHAR(25),
+       bid VARCHAR(6),
+       occupation VARCHAR(10),
+       dob DATE,
+      CONSTRAINT customer_custid_pk PRIMARY KEY(custid),
+      CONSTRAINT customer_bid_fk FOREIGN KEY(bid) REFERENCES branch(bid)
+   );
+desc customer;
+
+
+
+
+CREATE TABLE account
+   (
+      acnumber VARCHAR(6),
+      custid  VARCHAR(6),
+      bid VARCHAR(6),
+      opening_balance INT,
+      aod DATE,
+      atype VARCHAR(10),
+      astatus VARCHAR(10),
+      CONSTRAINT account_acnumber_pk PRIMARY KEY(acnumber),
+      CONSTRAINT account_custid_fk FOREIGN KEY(custid) REFERENCES customer(custid),
+      CONSTRAINT account_bid_fk FOREIGN KEY(bid) REFERENCES branch(bid) 
+    );
+desc account;
+
+
+
+
+CREATE TABLE tradedetails
+    (   
+     tnumber VARCHAR(6),
+     acnumber VARCHAR(6),
+     dot DATE,
+     medium_of_transaction VARCHAR(20),
+     transaction_type VARCHAR(20),
+     transaction_amount INT,    
+     CONSTRAINT tradedetails_tnumber_pk PRIMARY KEY(tnumber),
+     CONSTRAINT tradedetails_acnumber_fk FOREIGN KEY(acnumber) REFERENCES account(acnumber)  
+    );
+desc tradedetails;
+
+
+
+
+CREATE TABLE loan
+   (
+    custid VARCHAR(6),
+    bid VARCHAR(6),
+    loan_amount INT,
+    intrest REAL,
+    due_date DATE,
+    CONSTRAINT loan_customer_custid_bid_pk PRIMARY KEY(custid,bid),
+    CONSTRAINT loan_custid_fk FOREIGN KEY(custid) REFERENCES  customer(custid),
+    CONSTRAINT loan_bid_fk FOREIGN KEY(bid) REFERENCES  branch(bid)
+   );
+desc loan;
+
+
+
+
+CREATE TABLE employee
+  (
+    empid VARCHAR(6) PRIMARY KEY,
+    name VARCHAR(30),
+    contact VARCHAR(10),
+    address VARCHAR(40),
+    dob DATE,
+    salary REAL,
+    email VARCHAR(30),
+    bid VARCHAR(6),
+    department VARCHAR(25),
+    CONSTRAINT employee_empid_fk FOREIGN KEY(bid) REFERENCES branch(bid) 
+  );
+desc employee;
+
+
+************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+********{INSERT and SELECT(ALL)}********
+
+
+
+INSERT INTO branch VALUES('B00001','Asaf ali road','Delhi',73,14,'asafalibank@gmail.com');
+INSERT INTO branch VALUES('B00002','New delhi main branch','Delhi',238,27,'newdelhimainbbank@gmail.com');
+INSERT INTO branch VALUES('B00003','Vijayanagar','Bangalore',230,23,'vijayanagarbank@gmail.com');
+INSERT INTO branch VALUES('B00004','Jasola','Delhi',33,10,'jasolabank@gmail.com');
+INSERT INTO branch VALUES('B00005','Mahim','Mumbai',196,18,'mahimbank@gmail.com');
+INSERT INTO branch VALUES('B00006','Vile parle','Hydrabad',189,12,'vileparlebank@gmail.com');
+INSERT INTO branch VALUES('B00007','M.G road','Bangalore',223,19,'mgroadbank@gmail.com');
+INSERT INTO branch VALUES('B00008','Jadavpur','Kolkata',163,14,'jadavpurbank@gmail.com');
+INSERT INTO branch VALUES('B00009','Kodambakkam','Chennai',132,11,'kodambakkambank@gmail.com');
+select * from branch;
+
+
+
+
+
+
+INSERT INTO customer VALUES('C00001','Ramesh Chandra Sharma','Delhi','Asaf ali road 2nd cross delhi-23','9543198345','Ramesh1234@gmail.com','B00001','Service','1976-12-06');
+INSERT INTO customer VALUES('C00002','Avinash Sunder Minha','Delhi','New delhi main road presitge building room no.18','9876532109','Avinash@hotmail.com','B00003','Service','1974-10-16');
+INSERT INTO customer VALUES('C00003','Rahul Rastogi','Bangalore','Jk halli tc palya bangalore-53','9765178901','Rahul@outlook.com','B00006','Student','1981-09-26');
+INSERT INTO customer VALUES('C00004','Parul Gandhi','Delhi','Krishan hari road B block qtr no.15 Jasola','9876532109','Parul@gmail.com','B00004','Housewife','1976-11-03');
+INSERT INTO customer VALUES('C00005','Naveen Chandra Aedekar','Mumbai','Airforce quaters 92/1 house no.13 mahim road','8976523190','Naveen@gmail.com','B00008','Service','1976-09-19');
+INSERT INTO customer VALUES('C00006','Chitresh Barwe','Mumbai','Vile parle circle house no.38 3rd cross','7651298321','Chitresh@yahoo.com','B00005','Student','1992-11-06');
+INSERT INTO customer VALUES('C00007','Amit Kumar Borkar','Bangalore','Mg road church street bangalore-17','9875189761','Amit@gmail.com','B00009','Student','1981-09-06');
+INSERT INTO customer VALUES('C00008','Nisha Damle','Mumbai','5th main road raj bhavan Jadavpur house no.12','7954198761','Nisha@yahoo.com','B00007','Service','1975-12-03');
+INSERT INTO customer VALUES('C00009','Abhishek Dutta','Kolkata','Navy quaters house no.39 4th building Kodambakkam','9856198761','Abhishek@outlook.com','B00005','Service','1973-05-22');
+INSERT INTO customer VALUES('C00010','Shankar Nair','Chennai','srinidhi road 12th cross house no.#25','8765489076','Shankar@hotmail.com','B00002','Service','1976-07-12');
+select * from customer;
+
+
+
+
+
+
+INSERT INTO account VALUES('A00001','C00001','B00001',1000,'2012-12-15','Saving','Active');
+INSERT INTO account VALUES('A00002','C00002','B00001',1000,'2012-06-12','Saving','Active');
+INSERT INTO account VALUES('A00003','C00003','B00002',1000,'2012-05-17','Saving','Active');
+INSERT INTO account VALUES('A00004','C00002','B00005',1000,'2013-01-27','Saving','Active');
+INSERT INTO account VALUES('A00005','C00006','B00006',1000,'2012-12-17','Saving','Active');
+INSERT INTO account VALUES('A00006','C00007','B00007',1000,'2010-08-12','Saving','Suspended');
+INSERT INTO account VALUES('A00007','C00007','B00001',1000,'2012-10-02','Saving','Active');
+INSERT INTO account VALUES('A00008','C00001','B00003',1000,'2009-11-09','Saving','Terminated');
+INSERT INTO account VALUES('A00009','C00003','B00007',1000,'2008-11-30','Saving','Terminated');
+INSERT INTO account VALUES('A00010','C00004','B00002',1000,'2013-03-01','Saving','Active');
+select * from account;
+
+
+
+
+
+
+INSERT INTO tradedetails VALUES('T00001','A00001','2013-01-01','Cheque','Deposit',2000);
+INSERT INTO tradedetails VALUES('T00002','A00001','2013-02-01','Cash','Withdrawal',1000);
+INSERT INTO tradedetails VALUES('T00003','A00002','2013-01-01','Cash','Deposit',2000);
+INSERT INTO tradedetails VALUES('T00004','A00002','2013-02-01','Cash','Deposit',3000);
+INSERT INTO tradedetails VALUES('T00005','A00007','2013-01-11','Cash','Deposit',7000);
+INSERT INTO tradedetails VALUES('T00006','A00007','2013-01-13','Cash','Deposit',9000);
+INSERT INTO tradedetails VALUES('T00007','A00001','2013-03-13','Cash','Deposit',4000);
+INSERT INTO tradedetails VALUES('T00008','A00001','2013-03-14','Cheque','Deposit',3000);
+INSERT INTO tradedetails VALUES('T00009','A00001','2013-03-21','Cash','Withdrawal',9000);
+INSERT INTO tradedetails VALUES('T00010','A00001','2013-03-22','Cash','Withdrawal',2000);
+INSERT INTO tradedetails VALUES('T00011','A00002','2013-03-25','Cash','Withdrawal',7000);
+INSERT INTO tradedetails VALUES('T00012','A00007','2013-03-26','Cash','Withdrawal',2000);
+select * from tradedetails;
+
+
+
+
+
+
+INSERT INTO loan VALUES('C00001','B00001',100000,12.7,'2024-01-10');
+INSERT INTO loan VALUES('C00002','B00002',200000,11.3,'2027-02-12');
+INSERT INTO loan VALUES('C00009','B00008',400000,3.2,'2026-12-23');
+INSERT INTO loan VALUES('C00010','B00009',500000,13,'2023-11-17');
+INSERT INTO loan VALUES('C00001','B00003',600000,6.4,'2028-03-16');
+INSERT INTO loan VALUES('C00002','B00001',600000,8.9,'2024-07-01');
+select * from loan;
+
+
+
+
+
+
+INSERT INTO employee VALUES('E00001','Rahul Patel','9876543210','1236 FirstSt. Hydrabad','1995-02-15',45000.00,'rahulpatel@gmail.com','B00001','Finance');
+INSERT INTO employee VALUES('E00002','Priya Sharma','9876543211','456 FirstSt. New Delhi','1985-06-13',35000.00,'priyasharma@gmail.com','B00008','Trading');
+INSERT INTO employee VALUES('E00003','Ajit Kumar',9876543212,'789 SecondSt. Bangalore','1988-07-10',55000.00,'ajitkumar@gmail.com','B00009','Wealth Management');
+INSERT INTO employee VALUES('E00004','Kiran Gupta',9876543213,'321ThirdSt. Delhi','1992-12-30',60000.00,'kirangupta@gmail.com','B00003','Loan Servicing');
+INSERT INTO employee VALUES('E00005','Deepa Verma',9876543214,'654FourthSt. Kolkata','1985-05-20',75000.00,'deepaverma@gmail.com','B00005','Investing');
+INSERT INTO employee VALUES('E00006','Sneha Kumar',9876543215,'987FifthSt. Bangalore','1993-09-25',100000.00,'snehakumar@gmail.com','B00007','Marketing');
+INSERT INTO employee VALUES('E00007','Rohit Patel',9876543216,'753 SixthSt. Chennai','1986-04-18',65000.00,'rohitpatel@gmail.com','B00004','Finance');
+INSERT INTO employee VALUES('E00008','Ananya Gupta',9876543217,'965SeventhSt. Bangalore','1991-11-05',60000.00,'ananyagupta@gmail.com','B00006','Wealth Management');
+INSERT INTO employee VALUES('E00009','Harsh Chawla',9876543218,'852 EighthSt. Hydrabad','1989-03-12',150000.00,'harshchawla@gmail.com','B00002','InformationTechnology');
+INSERT INTO employee VALUES('E00010','Aditi Singh',9876543219,'159 NinthSt. Mumbai','1997-06-28',90000.00,'aditsingh@gmail.com','B00005','HumanResources');
+select * from employee;
+
+
+************************************************************************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+********{QUERIES}********
+
+
+
+1.Retrieve the names of all customers who have an active savings account
+    SELECT c.name FROM customer c JOIN account a ON c.custid = a.custid WHERE a.atype = 'Saving' AND a.astatus = 'Active';
+
+
+2.Retrieve the total number of employees in each branch
+    SELECT b.bname, COUNT(*) AS employee_count FROM branch b JOIN employee e ON b.bid = e.bid GROUP BY b.bname;
+
+
+3.Retrieve the names and email addresses of all employees who have a salary greater than 60000 and are in the wealth management department
+    SELECT e.name, e.email FROM employee e WHERE e.salary > 60000 AND e.department = 'Wealth Management';
+
+
+4.Retrieve the names and opening balances of all accounts with a transaction amount greater than 5000
+    SELECT a.acnumber, a.opening_balance FROM account a JOIN tradedetails t ON a.acnumber = t.acnumber WHERE t.transaction_amount > 5000;
+
+
+5.Retrieve the names of all customers who have a loan with an interest rate higher than 10%
+    SELECT c.name FROM customer c JOIN loan l ON c.custid = l.custid WHERE l.intrest > 10;
+
+
+6.Retrieve the total number of customers in each city
+    SELECT city, COUNT(*) AS customer_count FROM customer GROUP BY city;
+
+
+7.Retrieve the names and email addresses of all employees in the finance department
+    SELECT e.name, e.email FROM employee e WHERE e.department = 'Finance';
+
+
+8.Retrieve the names of all customers who have made a transaction using a cheque
+    SELECT c.name FROM customer c JOIN account a ON c.custid = a.custid JOIN tradedetails t ON a.acnumber = t.acnumber WHERE t.medium_of_transaction = 'Cheque';
+
+
+9.Retrieve the names of all customers who have an account with an opening balance greater than 5000 and have made a transaction using cash
+    SELECT c.name FROM customer c JOIN account a ON c.custid = a.custid JOIN tradedetails t ON a.acnumber = t.acnumber WHERE a.opening_balance > 5000 AND t.medium_of_transaction = 'Cash';
+
+
+10.Retrieve the names of all customers who have a loan with a due date in the year 2023
+     SELECT c.name FROM customer c JOIN loan l ON c.custid = l.custid WHERE YEAR(l.due_date) = 2023;
+
+
+
+
+
+
+
+
+
+
+
+********{CONCLUSION}********
+
+In conclusion, this project aimed to develop a bank database system using SQL to effectively manage employee and customer data. 
+
+By designing a relational database schema and implementing necessary relationships and queries, the system ensures smooth retrieval and manipulation of data. 
+
+The project highlights the significance of a well-structured and efficient bank database system, allowing for improved customer service, better account management, and effective loan and trade tracking. 
+
+By implementing the designed database system and utilizing the provided queries, banks can effectively manage their employee and customer data, leading to improved efficiency and accuracy in banking operations.
+
+Ultimately, this project aims to enhance the overall performance and reliability of banking processes.
+
+
+
+**********************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+********{FUTURE ENHANCEMENT}********
+
+
+
+In terms of Future Enhancement a future enhancement for the bank database project could be the integration with an online banking system which will enhance the overall performance and reliability of banking processes and 
+also give some additional features that can be incorporated later on into the online banking system some of which are:
+
+
+1.Account Management: Customers will be able to view their account details, including balance, transaction history, and account statements. 
+                                        They can also update their personal information, such as address and contact details, online.
+
+2.Funds Transfer: Customers will have the option to transfer funds between their own accounts, as well as to other bank accounts. 
+                            They can set up recurring transfers, schedule future transfers, and receive notifications for successful transfers.
+
+3.Bill Payments: Customers can pay their utility bills, credit card bills, and other bills online. 
+
+4.Mobile Banking: Integration with a mobile banking app will allow customers to access their accounts and perform banking transactions through their smartphones or tablets. 
+                             This will provide convenience and accessibility on-the-go.
+
+5.Secure Authentication: Implementing secure authentication methods, such as two-factor authentication, will ensure the security of online banking transactions and protect customer data.
+
+6.Customer Support: The online banking system can include a customer support feature, where customers can reach out for help or submit queries and complaints. 
+                                   This can be integrated with a customer relationship management (CRM) system to track and manage customer interactions.
+
+lastly by integrating the bank database with an online banking system will provide the above benefits to both customers and the bank which will 
+ultimately lead to increased customer satisfaction, retention, and overall efficiency in banking operations, therefore the BANK DATABASE has alot of future enhancement capabilities.
+
+
+
+********************************************************************************************************************************************************************************************************************************
